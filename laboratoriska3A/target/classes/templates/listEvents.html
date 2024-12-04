@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Booking Page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    body {
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+
+    header {
+      background-color: #343a40;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    h1, h2 {
+      color: #343a40;
+    }
+
+    form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .btn-block {
+      margin-top: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .event-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: white;
+    }
+
+    .event-actions {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Welcome to our Event Booking App</h1>
+</header>
+<main>
+  <section>
+    <h2 class="mt-4">Search an Event</h2>
+    <form th:method="GET" th:action="@{/events/events-list}">
+      <div class="form-group">
+        <label for="search">By Event Name:</label>
+        <input type="text" class="form-control" name="searchName" id="search" placeholder="Search an event">
+      </div>
+      <div class="form-group">
+        <label for="minRating">By Minimum Event Rating (0.00 - 10.00):</label>
+        <input type="number" class="form-control" name="minRating" id="minRating" min="0" max="10" placeholder="Min Rating">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Search</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Filter by Location</h2>
+    <form th:method="GET" th:action="@{/events/events-list/by-location}">
+      <div class="form-group">
+        <label for="locationId">Select Location:</label>
+        <select name="locationId" class="form-control" id="locationId">
+          <option th:each="location : ${locations}" th:value="${location.id}" th:text="${location.name}"></option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-secondary btn-block">Filter</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Choose an Event</h2>
+    <form id="mainForm" th:method="POST" th:action="@{/servlet/events/event-booking}">
+      <div th:if="${events != null}">
+        <div th:each="event : ${events}" class="event-card">
+          <div class="form-check">
+            <input type="radio" class="form-check-input" th:id="${event.getId()}" name="rad" th:value="${event.name}">
+            <label class="form-check-label" th:for="${event.getId()}">
+              <strong>Name:</strong> <th:block th:text="${event.getName()}"></th:block><br>
+              <strong>Description:</strong> <th:block th:text="${event.getDescription()}"></th:block><br>
+              <strong>Rating:</strong> <th:block th:text="${event.getPopularityScore()}"></th:block><br>
+              <strong>Location:</strong> <th:block th:if="${event.location != null}" th:text="${event.location.name}"></th:block>
+            </label>
+          </div>
+          <div class="event-actions">
+            <a th:href="@{'/events/events-list/edit-form/{id}' (id=${event.getId()})}" class="btn btn-sm btn-info">
+              Edit
+            </a>
+            <a th:href="@{'/events/events-list/event-details/{id}' (id=${event.getId()})}" class="btn btn-sm btn-primary">
+              Details
+            </a>
+          </div>
+        </div>
+      </div>
+      <div th:if="${events == null}">
+        <p class="text-muted">No events available.</p>
+      </div>
+
+      <a href="/events/events-list/add-form" class="btn btn-dark btn-block">Add New Event</a>
+
+      <h2 class="mt-4">Choose Number of Tickets</h2>
+      <input type="number" class="form-control" name="numTickets" min="1" max="10" placeholder="Number of tickets">
+      <button type="submit" class="btn btn-success btn-block mt-3">Book Now</button>
+    </form>
+  </section>
+</main>
+</body>
+</html>
