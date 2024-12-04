@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Events</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+            <h2>Add Event</h2>
+        </div>
+        <div class="card-body">
+            <form action="/events/add" method="POST">
+                <input id="id" type="hidden" name="id"
+                       th:value="(${Event} != null ? ${Event.getId()} : '')">
+
+                <div class="form-group">
+                    <label for="name">Event Name</label>
+                    <input type="text"
+                           class="form-control"
+                           id="name"
+                           name="name"
+                           th:value="(${Event} != null ? ${Event.getName()} : '')"
+                           required
+                           placeholder="Enter Event Name">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control"
+                              id="description"
+                              name="description"
+                              rows="3"
+                              th:value="(${Event} != null ? ${Event.getDescription()} : '')"
+                              placeholder="Description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="popularity_score">Popularity Score</label>
+                    <input type="number"
+                           class="form-control"
+                           id="popularity_score"
+                           name="popularity_score"
+                           th:value="(${Event} != null ? ${Event.getPopularityScore()} : '')"
+                           placeholder="Popularity Score">
+                </div>
+
+                <div class="form-group">
+                    <label for="location_id">Choose Location</label>
+                    <select class="form-control" name="location_id" id="location_id">
+                        <option th:each="location : ${location_IDS}"
+                                th:value="${Event} != null ? ${Event.getLocation().getId()} : ${location.getId()}"
+                                th:text="${location.getId()}">Location ID</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="category_id">Choose Category</label>
+                    <select class="form-control" name="category_id" id="category_id">
+                        <option th:each="Category : ${category_IDS}"
+                                th:value="${Event} != null ? ${Event.getCategory().getId()} : ${Category.getId()}"
+                                th:text="${Category.getName()}">Category</option>
+                    </select>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    <a href="/events" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
