@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Bookings</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>User Bookings</h2>
+
+    <div th:if="${#lists.isEmpty(bookings)}">
+        <p>No bookings found.</p>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(bookings)}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Booking ID</th>
+                <th scope="col">Event Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="booking : ${bookings}">
+                <td th:text="${booking.id}"></td>
+                <td th:text="${booking.eventName}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<a class="btn btn-secondary" href="/events">
+    <i class="fa-solid fa-arrow-left"></i> Back to Events
+</a>
+
+</body>
+</html>
